@@ -1,8 +1,8 @@
-import Toast from 'react-native-toast-message';
+// import Toast from 'react-native-toast-message';
 import { encrypt,decrypt } from 'n-krypta'
-import { View, AlertIOS,Text,Image,TextInput,Button,TouchableWithoutFeedback,ToastAndroid, Platform} from 'react-native'
+import { View, AlertIOS,Text,Image,Alert,TextInput,Button,TouchableWithoutFeedback,ToastAndroid, Platform} from 'react-native'
 import React, { useState } from 'react'
-import {getFirestore,collection,addDoc} from 'firebase/firestore'
+import {getFirestore,collection,doc,addDoc, setDoc} from 'firebase/firestore'
 import {useCollectionData} from 'react-firebase-hooks/firestore'
 import app from './firebase'
 export default function Register({navigation}) {
@@ -17,42 +17,35 @@ export default function Register({navigation}) {
 
       const curruser = data.filter(x=>x.name == user)
       if(curruser[0]){
-        if(Platform.OS == "android"){
-          
-          ToastAndroid.show("Username already exists",ToastAndroid.LONG)
-        }
-        else{
-          AlertIOS("Username Already exists")
-        }
+
+          Alert.alert('This account does not exist', 'Please check your email')
+        
+ 
       }
     else{
-      if(Platform.OS == "android"){
+    
+
+          
+      Alert.alert('Account Created', 'Account Created Succesfully')
+          const a  = setDoc(doc(db,"users",user),{
+            name:user,
+            password:encrypt(password,"mirdul_khota#62490")
+          })
         
-        ToastAndroid.show("OTP sent to your email",ToastAndroid.LONG)
-        const a  = addDoc(coll,{
-          name:user,
-          password:encrypt(password,"mirdul_khota#62490")
-        })
-        // navigation.navigate('Verification',{id:user})
-      }
-      else{
-        AlertIOS("OTP Sent to your email")
-        // const a  = addDoc(coll,{
-        //   name:user,
-        //   password:encrypt(password,"mirdul_khota#62490")
-        // })
-        
-        // navigation.navigate('Verification',{id:user})
-    }}
+
+ 
+  }
   }
   else{
     
     if(Platform.OS == "android"){
       
-      ToastAndroid.show("Please fill all the feilds",ToastAndroid.LONG)
+      // ToastAndroid.show("Please fill all the feilds",ToastAndroid.LONG)
+      Alert.alert('Please fill all the feilds')
     }
     else{
-      AlertIOS("Please fill all the feilds")
+      Alert.alert('Please fill all the feilds')
+      // AlertIOS("Please fill all the feilds")
     }
   }
     }
